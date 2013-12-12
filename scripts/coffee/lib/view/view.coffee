@@ -2,15 +2,13 @@ Element = require './Element'
 
 module.exports = class View
 
-	constructor: (@parent) ->
+	constructor: ->
 
 		@elements = []
 
-	newElement: (x, y) ->
+	newElement: (obj, x, y) ->
 
-		el = new Element @parent, x, y
-
-		@elements.push el
+		@elements.push el = new Element obj, x, y
 
 		return el
 
