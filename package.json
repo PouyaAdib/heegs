@@ -1,0 +1,26 @@
+{
+  "name": "heegs",
+  "version": "0.0.0",
+  "description": "",
+  "main": "scripts/js/lib/Heegs.js",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "coffee-script": "~1.6.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "node ./node_modules/coffee-script/bin/cake build"
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PouyaAdn/heegs.git"
+  },
+  "author": "PouyaAdn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PouyaAdn/heegs/issues"
+  },
+  "homepage": "https://github.com/PouyaAdn/heegs"
+}
