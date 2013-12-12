@@ -2,31 +2,28 @@ View = require '../view/View'
 BehavioursManager = require '../core/BehavioursManager'
 Particle = require '../particles/Particle'
 Euler = require '../integrator/Euler'
-Foxie = require 'foxie'
 
 module.exports = class Engine
 
-	constructor: (viewParent) ->
-
-		Engine.parent = viewParent
+	constructor: (@_ticker) ->
 
 		@particles = []
 
 		@behaviours = new BehavioursManager
 		@integrator = new Euler @particles
-		@view = new View viewParent
+		@view = new View
 
 		do @_start
 
-	newParticle: (x = 0, y = 0, vx0 = 0, vy0 = 0) ->
+	newParticle: (obj, x = 0, y = 0, vx0 = 0, vy0 = 0) ->
 
 		p = new Particle x, y, vx0, vy0
 
 		@particles.push p
 
-		el = @view.newElement x, y
+		@view.newElement obj, x, y
 
-		return p
+		return
 
 	_update: (t) =>
 
@@ -35,8 +32,6 @@ module.exports = class Engine
 		pos = @_updateParticles dt
 
 		@view.update pos
-
-		# @_returnPos @_updateParticles dt
 
 	_updateParticles: (dt) ->
 
@@ -60,7 +55,9 @@ module.exports = class Engine
 
 		@time = 0
 
-		Foxie.timing.beforeEachFrame @_update
+		@_ticker @_update
+
+		return
 
 	_ticktack: (t) ->
 
