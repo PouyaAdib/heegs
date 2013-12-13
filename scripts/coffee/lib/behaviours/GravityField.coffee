@@ -59,9 +59,9 @@ module.exports = class GravityField extends _Module
 
 	update: (dt, particle) ->
 
-		p = particle.position.get()
+		p = particle.position.v
 
-		dx = @x - p.x; dy = @y - p.y
+		dx = @x - p[0]; dy = @y - p[1]
 		dx2 = Math.pow(dx, 2)
 		dy2 = Math.pow(dy, 2)
 
@@ -69,8 +69,8 @@ module.exports = class GravityField extends _Module
 
 		if 0 < d <= @radiusSQ
 
-			sx = MT.sign dx, sy = MT.sign dy
-			theta = MT.lineSlope @x, @y, p.x, p.y
+			sx = MT.sign dx; sy = MT.sign dy
+			theta = MT.lineSlope @x, @y, p[0], p[1]
 
 			magnitude = @G * @mass / d
 

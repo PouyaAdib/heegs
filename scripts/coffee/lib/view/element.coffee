@@ -1,16 +1,13 @@
 module.exports = class Element
 
-	constructor: (@obj, x, y) ->
+	constructor: (@obj, @position) ->
 
-		@_move x, y
+		do @update
 
-	_move: (x, y) ->
+	update: ->
 
 		@obj
-		.moveXTo(x)
-		.moveYTo(y)
+		.moveXTo(@position.v[0])
+		.moveYTo(@position.v[1])
 
-	update: (pos) ->
-
-		@_move pos.x, pos.y
-
+		return

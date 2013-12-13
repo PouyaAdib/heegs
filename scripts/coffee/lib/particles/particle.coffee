@@ -6,13 +6,11 @@ module.exports = class Particle
 
 	constructor: (x, y, vx0, vy0) ->
 
-		@position = new Vector
-		@velocity = new Vector
+		@position = new Vector x, y
+		@velocity = new Vector vx0, vy0
 		@force = new Vector
 
 		@setMass()
-		@position.set x, y
-		@velocity.set vx0, vy0
 
 	setMass: (n = 1) ->
 

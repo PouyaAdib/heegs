@@ -21,7 +21,7 @@ module.exports = class Engine
 
 		@particles.push p
 
-		@view.newElement obj, x, y
+		@view.newElement obj, p.position
 
 		return
 
@@ -29,13 +29,13 @@ module.exports = class Engine
 
 		dt = @_ticktack t
 
-		pos = @_updateParticles dt
+		@_updateParticles dt
 
-		@view.update pos
+		do @view.update
+
+		return
 
 	_updateParticles: (dt) ->
-
-		positions = []
 
 		for particle in @particles
 
@@ -45,11 +45,9 @@ module.exports = class Engine
 
 			@integrator.update dt, particle
 
-			positions.push particle.position.get()
-
 			particle.force.set 0, 0
 
-		return positions
+		return
 
 	_start: ->
 
