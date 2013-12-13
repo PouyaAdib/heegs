@@ -25,16 +25,16 @@ module.exports = class Source
 
 	update: (dt, particle) ->
 
-		p = particle.position.get()
+		p = particle.position.v
 
-		dx = @x - p.x
-		dy = @y - p.y
+		dx = @x - p[0]
+		dy = @y - p[1]
 		sx = MT.sign dx
 		sy = MT.sign dy
 		dx2 = Math.pow dx, 2
 		dy2 = Math.pow dy, 2
 
-		theta = MT.lineSlope @x, @y, p.x, p.y
+		theta = MT.lineSlope @x, @y, p[0], p[1]
 
 		d = dx2 + dy2
 

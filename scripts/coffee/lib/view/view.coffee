@@ -6,14 +6,16 @@ module.exports = class View
 
 		@elements = []
 
-	newElement: (obj, x, y) ->
+	newElement: (obj, @position) ->
 
-		@elements.push el = new Element obj, x, y
+		@elements.push el = new Element obj, @position
 
 		return el
 
-	update: (positions) ->
+	update: ->
 
-		for element, i in @elements
+		for element in @elements
 
-			element.update positions[i]
+			do element.update
+
+		return

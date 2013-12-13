@@ -19,9 +19,9 @@ module.exports = class Drag extends _Module
 
 	update: (dt, particle) ->
 
-		v = particle.velocity.get()
+		v = particle.velocity.v
 
-		fx = - @b * v.x + Math.random() / 1000000
-		fy = - @b * v.y + Math.random() / 1000000
+		fx = - @b * v[0] + Math.random() / 1000000
+		fy = - @b * v[1] + Math.random() / 1000000
 
 		particle.force.add fx, fy

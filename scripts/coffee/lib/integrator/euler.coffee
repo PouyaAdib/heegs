@@ -4,17 +4,21 @@ module.exports = class Euler extends _Module
 
 	update: (dt, particle) ->
 
-		p = particle.position.get()
-		v = particle.velocity.get()
-		f = particle.force.get()
-		m = particle.getMass()
-		a = {x: f.x / m , y: f.y / m}
+		p = particle.position.v
+		v = particle.velocity.v
+		f = particle.force.v
+		m = particle.mass
 
-		x = .5 * a.x * Math.pow(dt, 2) + v.x * dt + p.x
-		y = .5 * a.y * Math.pow(dt, 2) + v.y * dt + p.y
+		aX = f[0] / m
+		aY = f[1] / m
 
-		vx = a.x * dt + v.x
-		vy = a.y * dt + v.y
+		x = .5 * aX * Math.pow(dt, 2) + v[0] * dt + p[0]
+		y = .5 * aY * Math.pow(dt, 2) + v[1] * dt + p[1]
+
+		vx = aX * dt + v[0]
+		vy = aY * dt + v[1]
 
 		particle.position.set x, y
 		particle.velocity.set vx, vy
+
+		return
