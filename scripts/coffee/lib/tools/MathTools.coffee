@@ -2,9 +2,8 @@ module.exports = MathTools =
 
 	sign: (x) ->
 
-		if x is 0 then return 0
+		`x > 0.0 ? 1 : -1`
 
-		Math.abs(x) / x
 
 	lineSlope: (x0, y0, x1, y1) ->
 
