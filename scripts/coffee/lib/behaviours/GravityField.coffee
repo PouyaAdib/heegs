@@ -13,31 +13,6 @@ module.exports = class GravityField extends _Module
 
 		@_setDefaultValues()
 
-	appear: ->
-		d = document.createElement 'div'
-		c = document.createElement 'div'
-		r = @radius
-		l = @x - r
-		t = @y - r
-		c.style.width = '5px'
-		c.style.height = '5px'
-		c.style.borderRadius = '50%'
-		c.style.background = 'black'
-		c.style.left = @x - 5 + 'px'
-		c.style.top = @y - 5 + 'px'
-		c.style.position = 'absolute'
-		d.style.width = 2 * r + 'px'
-		d.style.height = 2 * r + 'px'
-		d.style.left = l + 'px'
-		d.style.top = t + 'px'
-		d.style.borderRadius = '50%'
-		d.style.background = 'trasnparent'
-		d.style.border = '1px solid black'
-		d.style.position = 'absolute'
-		b = document.body
-		b.appendChild d
-		b.appendChild c
-
 	_setDefaultValues: ->
 
 		@mass = GravityField.mass
@@ -57,11 +32,12 @@ module.exports = class GravityField extends _Module
 
 		@radiusSQ = Math.pow(@radius, 2)
 
-	update: (dt, particle) ->
+	update: (dt, data, offset) ->
 
-		p = particle.position.v
+		x = data[offset]
+		y = data[offset + 1]
 
-		dx = @x - p[0]; dy = @y - p[1]
+		dx = @x - x; dy = @y - y
 		dx2 = Math.pow(dx, 2)
 		dy2 = Math.pow(dy, 2)
 
@@ -70,13 +46,14 @@ module.exports = class GravityField extends _Module
 		if 0 < d <= @radiusSQ
 
 			sx = MT.sign dx; sy = MT.sign dy
-			theta = MT.lineSlope @x, @y, p[0], p[1]
+			theta = MT.lineSlope @x, @y, x, y
 
 			magnitude = @G * @mass / d
 
 			fx = sx * Math.abs(Math.cos(theta)) * magnitude
 			fy = sy * Math.abs(Math.sin(theta)) * magnitude
 
-			particle.force.add fx, fy
+			data[offset + 6] += fx
+			data[offset + 7] += fy
 
 		return

@@ -23,18 +23,19 @@ module.exports = class Sink extends _Module
 
 		@c = n * Sink.c
 
-	update: (dt, particle) ->
+	update: (dt, data, offset) ->
 
-		p = particle.position.get()
+		x = data[offset]
+		y = data[offset + 1]
 
-		dx = @x - p[0]
-		dy = @y - p[1]
+		dx = @x - x
+		dy = @y - y
 		sx = MT.sign dx
 		sy = MT.sign dy
 		dx2 = Math.pow dx, 2
 		dy2 = Math.pow dy, 2
 
-		theta = MT.lineSlope @x, @y, p[0], p[1]
+		theta = MT.lineSlope @x, @y, x, y
 
 		d = dx2 + dy2
 
@@ -43,4 +44,5 @@ module.exports = class Sink extends _Module
 		fx = sx * Math.abs(Math.cos(theta)) * magnitude
 		fy = sy * Math.abs(Math.sin(theta)) * magnitude
 
-		particle.force.add fx, fy
+		data[offset + 6] += fx
+		data[offset + 7] += fy

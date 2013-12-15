@@ -2,20 +2,26 @@ Vector = require '../tools/Vector'
 
 module.exports = class Particle
 
-	@mass = 1
+	constructor: (@param) ->
 
-	constructor: (x, y, vx0, vy0) ->
+	setMass: (m) ->
 
-		@position = new Vector x, y
-		@velocity = new Vector vx0, vy0
-		@force = new Vector
+		@param.m[0] = m
 
-		@setMass()
+		@
 
-	setMass: (n = 1) ->
+	moveTo: (x, y, z) ->
 
-		@mass = n * Particle.mass
+		@param.p[0] = x
+		@param.p[1] = y
+		@param.p[2] = z
 
-	getMass: ->
+		@
 
-		return @mass
+	setV0: (x, y, z) ->
+
+		@param.v[0] = x
+		@param.v[1] = y
+		@param.v[2] = z
+
+		@
