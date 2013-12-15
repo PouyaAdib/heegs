@@ -14,6 +14,8 @@ module.exports = class BehavioursManager
 
 	remove: (behaviour) ->
 
+		# TODO: use utila.array.pluckItem
+
 		newBehaviours = []
 
 		for b in @behaviours

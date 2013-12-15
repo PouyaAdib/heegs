@@ -63,13 +63,13 @@ module.exports = class GravityLine extends _Module
 
 		p = particle.position.get()
 
-		d = Math.pow(@a * p.x + @b * p.y + @c, 2) / @denominator
+		d = Math.pow(@a * p[0] + @b * p[1] + @c, 2) / @denominator
 
 		if d <= @rangeSQ
 
 			magnitude = @g * (@rangeSQ - d)
 
-			c = p.y - @m * p.x
+			c = p[1] - @m * p[0]
 
 			t = if c > @lc then 90 else -90
 			s = if @rotation > 90 then -1 else 1

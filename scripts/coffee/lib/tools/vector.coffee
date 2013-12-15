@@ -2,15 +2,23 @@ module.exports = class Vector
 
 	constructor: (x = 0, y = 0) ->
 
-		@v = {x: x, y: y}
+		@v = new Float32Array 2
+
+		@set x, y
 
 	set: (x, y) ->
 
-		@v = {x: x, y: y}
+		@v[0] = x
+		@v[1] = y
+
+		return
 
 	add: (x, y) ->
 
-		@v = {x: @v.x + x, y: @v.y + y}
+		@v[0] += x
+		@v[1] += y
+
+		return
 
 	get: ->
 
