@@ -6,9 +6,9 @@ module.exports = class View
 
 		@elements = []
 
-	newElement: (obj, @position) ->
+	newElement: (obj, position) ->
 
-		@elements.push el = new Element obj, @position
+		@elements.push el = new Element obj, position
 
 		return el
 
