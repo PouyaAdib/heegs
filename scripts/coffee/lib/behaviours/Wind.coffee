@@ -1,117 +1,117 @@
-_Module = require '../core/_Module'
-MT = require '../tools/MathTools'
-Engine = require '../core/Engine'
+# _Module = require '../core/_Module'
+# MT = require '../tools/MathTools'
+# Engine = require '../core/Engine'
 
-module.exports = class Wind extends _Module
+# module.exports = class Wind extends _Module
 
-	@c = 0.0001
-	@pattern = [
+# 	@c = 0.0001
+# 	@pattern = [
 
-			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
-			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
-			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
-			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
-			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
-			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
-			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
-			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
-			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
-			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
+# 			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
+# 			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
+# 			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
+# 			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
+# 			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
+# 			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
+# 			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
+# 			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
+# 			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
+# 			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
 
-		]
+# 		]
 
-		@width = 400
-		@height = 800
+# 		@width = 400
+# 		@height = 800
 
-		@xf = @width / (@pattern[0].length - 1)
-		@yf = @height / (@pattern.length - 1)
+# 		@xf = @width / (@pattern[0].length - 1)
+# 		@yf = @height / (@pattern.length - 1)
 
-		@x = 0
-		@y = 0
+# 		@x = 0
+# 		@y = 0
 
-		@duration = 10000
-		@speed = 1
+# 		@duration = 10000
+# 		@speed = 1
 
-	constructor: (@parent) ->
+# 	constructor: (@parent) ->
 
-		@_setDefaultValues()
+# 		@_setDefaultValues()
 
-		@appear()
+# 		@appear()
 
-		@_blow()
+# 		@_blow()
 
-	_setDefaultValues: ->
+# 	_setDefaultValues: ->
 
-		@c = Wind.c
+# 		@c = Wind.c
 
-		@pattern = Wind.pattern
+# 		@pattern = Wind.pattern
 
-		@width = Wind.width
-		@height = Wind.height
+# 		@width = Wind.width
+# 		@height = Wind.height
 
-		@xf = Wind.xf
-		@yf = Wind.yf
+# 		@xf = Wind.xf
+# 		@yf = Wind.yf
 
-		@x = Wind.x
-		@y = Wind.y
+# 		@x = Wind.x
+# 		@y = Wind.y
 
-		@duration = Wind.duration
-		@speed = Wind.speed
+# 		@duration = Wind.duration
+# 		@speed = Wind.speed
 
-		@step = Math.floor(@duration / 16) + 1
+# 		@step = Math.floor(@duration / 16) + 1
 
-	setIntensity: (n) ->
+# 	setIntensity: (n) ->
 
-		@c = n * Wind.c
+# 		@c = n * Wind.c
 
-	setDuration: (@duration) ->
+# 	setDuration: (@duration) ->
 
-	setSpeed: (n) ->
+# 	setSpeed: (n) ->
 
-		@speed = n * Wind.speed
+# 		@speed = n * Wind.speed
 
-	update: (dt, particle) ->
+# 	update: (dt, particle) ->
 
-		p = particle.position.get()
+# 		p = particle.position.get()
 
-		if @x < p.x < @x + @width and @y < p.y < @y + @height
+# 		if @x < p.x < @x + @width and @y < p.y < @y + @height
 
-			mx = Math.floor(p.x / @xf)
-			my = Math.floor(p.y / @yf)
+# 			mx = Math.floor(p.x / @xf)
+# 			my = Math.floor(p.y / @yf)
 
-			fx = @pattern[my][mx] * @c
+# 			fx = @pattern[my][mx] * @c
 
-			particle.force.add fx, 0
+# 			particle.force.add fx, 0
 
-	_blow: () =>
+# 	_blow: () =>
 
-		for i in [0..@step]
+# 		for i in [0..@step]
 
-			do (i) =>
+# 			do (i) =>
 
-				setTimeout =>
+# 				setTimeout =>
 
-					@x = i * 1600 / @step
-					@move(@x)
+# 					@x = i * 1600 / @step
+# 					@move(@x)
 
-				, 16 * i
+# 				, 16 * i
 
-	_remove: () ->
+# 	_remove: () ->
 
-		@parent.remove @
+# 		@parent.remove @
 
-	appear: () ->
+# 	appear: () ->
 
-		@d = document.createElement 'div'
-		document.body.appendChild @d
+# 		@d = document.createElement 'div'
+# 		document.body.appendChild @d
 
-		@d.style.width = @width + 'px'
-		@d.style.height = @height + 'px'
-		@d.style.background = 'black'
-		@d.style.opacity = .2
-		@d.style.position = 'absolute'
+# 		@d.style.width = @width + 'px'
+# 		@d.style.height = @height + 'px'
+# 		@d.style.background = 'black'
+# 		@d.style.opacity = .2
+# 		@d.style.position = 'absolute'
 
-	move: (x) ->
+# 	move: (x) ->
 
-		@d.style.webkitTransform = "translateX(#{x}px)"
+# 		@d.style.webkitTransform = "translateX(#{x}px)"
 

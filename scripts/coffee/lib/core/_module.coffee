@@ -4,7 +4,7 @@ module.exports = class _Module
 
 		@_setDefaultValues()
 
-	update: (dt, particle) ->
+	update: (dt, data, offset) ->
 
 	_remove: ->
 

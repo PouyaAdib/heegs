@@ -2,23 +2,28 @@ _Module = require '../core/_Module'
 
 module.exports = class Euler extends _Module
 
-	update: (dt, particle) ->
+	update: (dt, data, offset) ->
 
-		p = particle.position.v
-		v = particle.velocity.v
-		f = particle.force.v
-		m = particle.mass
+		x = data[offset]
+		y = data[offset + 1]
+		m = data[offset + 9]
+		vx = data[offset + 3]
+		vy = data[offset + 4]
+		fx = data[offset + 6]
+		fy = data[offset + 7]
 
-		aX = f[0] / m
-		aY = f[1] / m
+		aX = fx / m
+		aY = fy / m
 
-		x = .5 * aX * Math.pow(dt, 2) + v[0] * dt + p[0]
-		y = .5 * aY * Math.pow(dt, 2) + v[1] * dt + p[1]
+		x = .5 * aX * Math.pow(dt, 2) + vx * dt + x
+		y = .5 * aY * Math.pow(dt, 2) + vy * dt + y
 
-		vx = aX * dt + v[0]
-		vy = aY * dt + v[1]
+		vx = aX * dt + vx
+		vy = aY * dt + vy
 
-		particle.position.set x, y
-		particle.velocity.set vx, vy
+		data[offset] = x
+		data[offset + 1] = y
+		data[offset + 3] = vx
+		data[offset + 4] = vy
 
 		return

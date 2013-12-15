@@ -1,29 +1,58 @@
-View = require '../view/View'
-BehavioursManager = require '../core/BehavioursManager'
 Particle = require '../particles/Particle'
 Euler = require '../integrator/Euler'
+Esterakt = require 'esterakt'
 
 module.exports = class Engine
 
-	constructor: (@_ticker) ->
+	constructor: (n, @_ticker) ->
 
+		@n = parseInt n
 		@particles = []
+		@behaviours = []
 
-		@behaviours = new BehavioursManager
-		@integrator = new Euler @particles
-		@view = new View
+		@integrator = new Euler
+
+		do @_prepareParticles
 
 		do @_start
 
-	newParticle: (obj, x = 0, y = 0, vx0 = 0, vy0 = 0) ->
+	_updateViewForOffset: ->
 
-		p = new Particle x, y, vx0, vy0
+	setViewUpdater: (fn) ->
 
-		@particles.push p
+		@_updateViewForOffset = fn
 
-		@view.newElement obj, p.position
+		@
 
-		return
+	_prepareParticles: ->
+
+		@_struct = new Esterakt
+
+		@_struct.float 'p', 3
+
+		@_struct.float 'v', 3
+
+		@_struct.float 'f', 3
+
+		@_struct.float 'm', 1, [1]
+
+		@_params = @_struct.makeParamHolders {}, @n
+
+		@_data = new Float32Array @_params.buffer
+
+		for param in @_params
+
+			@particles.push p = new Particle param
+
+		@
+
+	getParticles: () ->
+
+		return @particles
+
+	getParticle: (i) ->
+
+		return @particles[i]
 
 	_update: (t) =>
 
@@ -31,21 +60,25 @@ module.exports = class Engine
 
 		@_updateParticles dt
 
-		do @view.update
-
 		return
 
 	_updateParticles: (dt) ->
 
-		for particle in @particles
+		for i in [0...@n]
 
-			for behaviour in @behaviours.get()
+			offset = (i * 10)|0
 
-				behaviour.update dt, particle
+			for b in @behaviours
 
-			@integrator.update dt, particle
+				b.update dt, @_data, offset
 
-			particle.force.set 0, 0
+			@integrator.update dt, @_data, offset
+
+			@_data[offset + 6] = 0
+			@_data[offset + 7] = 0
+			@_data[offset + 8] = 0
+
+			@_updateViewForOffset @_data, offset, i
 
 		return
 
@@ -63,3 +96,21 @@ module.exports = class Engine
 		@time = t
 
 		return dt
+
+	addBehaviour: (behaviour) ->
+
+		b = new behaviour @
+
+		@behaviours.push b
+
+		return b
+
+	removeBehaviour: (behaviour) ->
+
+		newBehaviours = []
+
+		for b in @behaviours
+
+			if b isnt behaviour then newBehaviours.push b
+
+		@behaviours = newBehaviours

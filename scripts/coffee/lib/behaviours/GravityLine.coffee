@@ -59,17 +59,18 @@ module.exports = class GravityLine extends _Module
 
 		@rangeSQ = Math.pow @range, 2
 
-	update: (dt, particle) ->
+	update: (dt, data, offset) ->
 
-		p = particle.position.get()
+		x = data[offset]
+		y = data[offset + 1]
 
-		d = Math.pow(@a * p[0] + @b * p[1] + @c, 2) / @denominator
+		d = Math.pow(@a * x + @b * y + @c, 2) / @denominator
 
 		if d <= @rangeSQ
 
 			magnitude = @g * (@rangeSQ - d)
 
-			c = p[1] - @m * p[0]
+			c = y - @m * x
 
 			t = if c > @lc then 90 else -90
 			s = if @rotation > 90 then -1 else 1
@@ -79,6 +80,7 @@ module.exports = class GravityLine extends _Module
 			fx = s * Math.cos(theta) * magnitude
 			fy = - s * Math.sin(theta) * magnitude
 
-			particle.force.add fx, fy
+			data[offset + 6] += fx
+			data[offset + 7] += fy
 
 		return
