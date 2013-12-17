@@ -1,5 +1,5 @@
 _Module = require '../core/_Module'
-MT = require '../tools/MathTools'
+{sign} = require '../tools/MathTools'
 
 module.exports = class Sink extends _Module
 
@@ -30,19 +30,11 @@ module.exports = class Sink extends _Module
 
 		dx = @x - x
 		dy = @y - y
-		sx = MT.sign dx
-		sy = MT.sign dy
-		dx2 = Math.pow dx, 2
-		dy2 = Math.pow dy, 2
+		dx2 = dx * dx
+		dy2 = dy * dy
 
-		theta = MT.lineSlope @x, @y, x, y
-
-		d = dx2 + dy2
-
-		magnitude = @c * d
-
-		fx = sx * Math.abs(Math.cos(theta)) * magnitude
-		fy = sy * Math.abs(Math.sin(theta)) * magnitude
+		fx = sign(dx) * @c * (dx2 + dy2) / (Math.sqrt(1 + (dy / dx) * (dy / dx)))
+		fy = dy * sign(dy) * fx / dx
 
 		data[offset + 6] += fx
 		data[offset + 7] += fy

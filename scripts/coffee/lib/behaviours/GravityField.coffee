@@ -1,5 +1,5 @@
 _Module = require '../core/_Module'
-MT = require '../tools/MathTools'
+{sign} = require '../tools/MathTools'
 
 module.exports = class GravityField extends _Module
 
@@ -30,7 +30,7 @@ module.exports = class GravityField extends _Module
 
 	setRadius: (@radius) ->
 
-		@radiusSQ = Math.pow(@radius, 2)
+		@radiusSQ = @radius * @radius
 
 	update: (dt, data, offset) ->
 
@@ -38,20 +38,15 @@ module.exports = class GravityField extends _Module
 		y = data[offset + 1]
 
 		dx = @x - x; dy = @y - y
-		dx2 = Math.pow(dx, 2)
-		dy2 = Math.pow(dy, 2)
+		dx2 = dx * dx
+		dy2 = dy * dy
 
 		d = dx2 + dy2
 
 		if 0 < d <= @radiusSQ
 
-			sx = MT.sign dx; sy = MT.sign dy
-			theta = MT.lineSlope @x, @y, x, y
-
-			magnitude = @G * @mass / d
-
-			fx = sx * Math.abs(Math.cos(theta)) * magnitude
-			fy = sy * Math.abs(Math.sin(theta)) * magnitude
+			fx = sign(dx) * @G * @mass / d / (Math.sqrt(1 + (dy / dx) * (dy / dx)))
+			fy = dy * sign(dy) * fx / dx
 
 			data[offset + 6] += fx
 			data[offset + 7] += fy

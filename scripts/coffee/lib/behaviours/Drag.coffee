@@ -22,8 +22,8 @@ module.exports = class Drag extends _Module
 		vx = data[offset + 3]
 		vy = data[offset + 4]
 
-		fx = - @b * vx + Math.random() / 1000000
-		fy = - @b * vy + Math.random() / 1000000
+		fx = - @b * vx + Math.random() * .000001
+		fy = - @b * vy + Math.random() * .000001
 
 		data[offset + 6] += fx
 		data[offset + 7] += fy
