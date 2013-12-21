@@ -3,7 +3,8 @@ MT = require '../tools/MathTools'
 
 module.exports = class Drag extends _Module
 
-	@b = 0.00001
+	@sb = 0.000001
+	@db = 0.000001
 
 	constructor: ->
 
@@ -11,19 +12,21 @@ module.exports = class Drag extends _Module
 
 	_setDefaultValues: ->
 
-		@b = Drag.b
+		@sb = Drag.sb
+		@db = Drag.db
 
-	setIntensity: (n) ->
+	setIntensity: (n, m) ->
 
-		@b = n * Drag.b
+		@sb = n * Drag.sb
+		@db = m * Drag.db
 
-	update: (dt, data, offset) ->
+	update: (dt, x, y, data, offset) ->
 
 		vx = data[offset + 3]
 		vy = data[offset + 4]
 
-		fx = - @b * vx + Math.random() * .000001
-		fy = - @b * vy + Math.random() * .000001
+		fx = - ( @sb + Math.random() * @db ) * vx
+		fy = - ( @sb + Math.random() * @db ) * vy
 
 		data[offset + 6] += fx
 		data[offset + 7] += fy

@@ -2,10 +2,8 @@ _Module = require '../core/_Module'
 
 module.exports = class Euler extends _Module
 
-	update: (dt, data, offset) ->
+	update: (dt, x, y, data, offset) ->
 
-		x = data[offset]
-		y = data[offset + 1]
 		m = data[offset + 9]
 		vx = data[offset + 3]
 		vy = data[offset + 4]

@@ -1,117 +1,81 @@
-# _Module = require '../core/_Module'
-# MT = require '../tools/MathTools'
-# Engine = require '../core/Engine'
+_Module = require '../core/_Module'
+MT = require '../tools/MathTools'
 
-# module.exports = class Wind extends _Module
+module.exports = class Wind extends _Module
 
-# 	@c = 0.0001
-# 	@pattern = [
+	@c = 0.00001
+	@pattern = [
 
-# 			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
-# 			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
-# 			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
-# 			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
-# 			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
-# 			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
-# 			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
-# 			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
-# 			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
-# 			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
+			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
+			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
+			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
+			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
+			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
+			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
+			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
+			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
+			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
+			[.4, .1, .4, .5, .3, .7, 1, .2, .3, .4],
 
-# 		]
+		]
 
-# 		@width = 400
-# 		@height = 800
+		@width = 400
+		@height = 800
 
-# 		@xf = @width / (@pattern[0].length - 1)
-# 		@yf = @height / (@pattern.length - 1)
+		@xl = @pattern[0].length - 1
+		@yl = @pattern.length - 1
 
-# 		@x = 0
-# 		@y = 0
+		@xf = @width / @xl
+		@yf = @height / @yl
 
-# 		@duration = 10000
-# 		@speed = 1
+		@x = 0
+		@y = 0
 
-# 	constructor: (@parent) ->
+		@speed = 1
 
-# 		@_setDefaultValues()
+	constructor: () ->
 
-# 		@appear()
+		@_setDefaultValues()
 
-# 		@_blow()
+	_setDefaultValues: ->
 
-# 	_setDefaultValues: ->
+		@c = Wind.c
 
-# 		@c = Wind.c
+		@pattern = Wind.pattern
 
-# 		@pattern = Wind.pattern
+		@xf = Wind.xf
+		@yf = Wind.yf
 
-# 		@width = Wind.width
-# 		@height = Wind.height
+		@x = Wind.x
+		@y = Wind.y
 
-# 		@xf = Wind.xf
-# 		@yf = Wind.yf
+		@width = Wind.width
+		@height = Wind.height
 
-# 		@x = Wind.x
-# 		@y = Wind.y
+		@xend = @x + Wind.width
+		@yend = @y + Wind.height
 
-# 		@duration = Wind.duration
-# 		@speed = Wind.speed
+	setIntensity: (n) ->
 
-# 		@step = Math.floor(@duration / 16) + 1
+		@c = n * Wind.c
 
-# 	setIntensity: (n) ->
+	setPos: (@x, @y) ->
 
-# 		@c = n * Wind.c
+		@xend = @x + @width
+		@yend = @y + @height
 
-# 	setDuration: (@duration) ->
+	setSize: (@width, @height) ->
 
-# 	setSpeed: (n) ->
+		@xend = @x + @width
+		@yend = @y + @height
 
-# 		@speed = n * Wind.speed
+		@xf = @width / Wind.xl
+		@yf = @height / Wind.yl
 
-# 	update: (dt, particle) ->
+	update: (dt, x, y, data, offset) ->
 
-# 		p = particle.position.get()
+		if @x < x < @xend and @y < y < @yend
 
-# 		if @x < p.x < @x + @width and @y < p.y < @y + @height
+			fx = @pattern[Math.floor(Math.abs(y - @y) / @yf)][Math.floor(Math.abs(x - @x) / @xf)] * @c
 
-# 			mx = Math.floor(p.x / @xf)
-# 			my = Math.floor(p.y / @yf)
-
-# 			fx = @pattern[my][mx] * @c
-
-# 			particle.force.add fx, 0
-
-# 	_blow: () =>
-
-# 		for i in [0..@step]
-
-# 			do (i) =>
-
-# 				setTimeout =>
-
-# 					@x = i * 1600 / @step
-# 					@move(@x)
-
-# 				, 16 * i
-
-# 	_remove: () ->
-
-# 		@parent.remove @
-
-# 	appear: () ->
-
-# 		@d = document.createElement 'div'
-# 		document.body.appendChild @d
-
-# 		@d.style.width = @width + 'px'
-# 		@d.style.height = @height + 'px'
-# 		@d.style.background = 'black'
-# 		@d.style.opacity = .2
-# 		@d.style.position = 'absolute'
-
-# 	move: (x) ->
-
-# 		@d.style.webkitTransform = "translateX(#{x}px)"
-
+			data[offset + 6] = fx
