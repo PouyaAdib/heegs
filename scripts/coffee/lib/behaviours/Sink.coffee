@@ -23,10 +23,7 @@ module.exports = class Sink extends _Module
 
 		@c = n * Sink.c
 
-	update: (dt, data, offset) ->
-
-		x = data[offset]
-		y = data[offset + 1]
+	update: (dt, x, y, data, offset) ->
 
 		dx = @x - x
 		dy = @y - y
@@ -34,7 +31,7 @@ module.exports = class Sink extends _Module
 		dy2 = dy * dy
 
 		fx = sign(dx) * @c * (dx2 + dy2) / (Math.sqrt(1 + (dy / dx) * (dy / dx)))
-		fy = dy * sign(dy) * fx / dx
+		fy = sign(dy) * @c * (dx2 + dy2) / (Math.sqrt(1 + (dx / dy) * (dx / dy)))
 
 		data[offset + 6] += fx
 		data[offset + 7] += fy

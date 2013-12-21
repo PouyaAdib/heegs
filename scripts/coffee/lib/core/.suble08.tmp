@@ -16,8 +16,6 @@ module.exports = class Engine
 
 		do @_start
 
-		@
-
 	_updateViewForOffset: ->
 
 	setViewUpdater: (fn) ->
@@ -70,14 +68,11 @@ module.exports = class Engine
 
 			offset = (i * 10)|0
 
-			x = @_data[offset]
-			y = @_data[offset + 1]
-
 			for b in @behaviours
 
-				b.update dt, x, y, @_data, offset
+				b.update dt, @_data, offset
 
-			@integrator.update dt, x, y, @_data, offset
+			@integrator.update dt, @_data, offset
 
 			@_data[offset + 6] = 0
 			@_data[offset + 7] = 0
@@ -104,7 +99,7 @@ module.exports = class Engine
 
 	addBehaviour: (behaviour) ->
 
-		b = new behaviour
+		b = new behaviour @
 
 		@behaviours.push b
 
@@ -119,5 +114,3 @@ module.exports = class Engine
 			if b isnt behaviour then newBehaviours.push b
 
 		@behaviours = newBehaviours
-
-		@
