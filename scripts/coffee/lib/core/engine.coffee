@@ -4,7 +4,7 @@ Esterakt = require 'esterakt'
 
 module.exports = class Engine
 
-	constructor: (n, @_ticker) ->
+	constructor: (n) ->
 
 		@n = parseInt n
 		@particles = []
@@ -14,33 +14,28 @@ module.exports = class Engine
 
 		do @_prepareParticles
 
-		do @_start
-
-		@
-
-	_updateViewForOffset: ->
-
-	setViewUpdater: (fn) ->
-
-		@_updateViewForOffset = fn
-
 		@
 
 	_prepareParticles: ->
 
 		@_struct = new Esterakt
 
-		@_struct.float 'p', 3
+		@_struct.getContainer('pos').float 'p', 3
 
-		@_struct.float 'v', 3
+		phys = @_struct.getContainer('phys')
 
-		@_struct.float 'f', 3
+		phys.float 'v', 3
 
-		@_struct.float 'm', 1, [1]
+		phys.float 'f', 3
+
+		phys.float 'm', 1, [1]
 
 		@_params = @_struct.makeParamHolders {}, @n
 
-		@_data = new Float32Array @_params.buffer
+		@_physData = new Float32Array @_params.__buffers.phys
+		@_posData = new Float32Array @_params.__buffers.pos
+
+		@uint8ViewOnPos = @_params.__uint8Views.pos
 
 		for param in @_params
 
@@ -50,13 +45,17 @@ module.exports = class Engine
 
 	getParticles: () ->
 
-		return @particles
+		@particles
 
 	getParticle: (i) ->
 
-		return @particles[i]
+		@particles[i]
 
-	_update: (t) =>
+	start: (t) ->
+
+		@time = t
+
+	update: (t) ->
 
 		dt = @_ticktack t
 
@@ -68,30 +67,21 @@ module.exports = class Engine
 
 		for i in [0...@n]
 
-			offset = (i * 10)|0
+			posOffset = (i * 3) | 0
+			physOffset = (i * 7)|0
 
-			x = @_data[offset]
-			y = @_data[offset + 1]
+			x = @_posData[posOffset]
+			y = @_posData[posOffset + 1]
 
 			for b in @behaviours
 
-				b.update dt, x, y, @_data, offset
+				b.update dt, x, y, @_physData, physOffset
 
-			@integrator.update dt, x, y, @_data, offset
+			@integrator.update dt, x, y, @_physData, physOffset, @_posData, posOffset
 
-			@_data[offset + 6] = 0
-			@_data[offset + 7] = 0
-			@_data[offset + 8] = 0
-
-			@_updateViewForOffset @_data, offset, i
-
-		return
-
-	_start: ->
-
-		@time = 0
-
-		@_ticker @_update
+			@_physData[physOffset + 3] = 0
+			@_physData[physOffset + 4] = 0
+			@_physData[physOffset + 5] = 0
 
 		return
 

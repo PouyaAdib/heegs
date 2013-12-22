@@ -4,7 +4,7 @@
   "description": "",
   "main": "scripts/js/lib/Heegs.js",
   "dependencies": {
-    "esterakt": "~0.1.1"
+    "esterakt": "*"
   },
   "devDependencies": {
     "coffee-script": "~1.6.3"

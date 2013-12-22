@@ -78,4 +78,4 @@ module.exports = class Wind extends _Module
 
 			fx = @pattern[Math.floor(Math.abs(y - @y) / @yf)][Math.floor(Math.abs(x - @x) / @xf)] * @c
 
-			data[offset + 6] = fx
+			data[offset + 3] = fx
