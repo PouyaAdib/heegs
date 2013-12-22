@@ -30,5 +30,5 @@ module.exports = class HGravity extends _Module
 
 			f = (@y - y) * @g
 
-			data[offset + 7] += f
+			data[offset + 4] += f
 

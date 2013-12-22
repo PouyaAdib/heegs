@@ -45,7 +45,7 @@ module.exports = class GravityField extends _Module
 			fx = sign(dx) * @G * @mass / d / (Math.sqrt(1 + (dy / dx) * (dy / dx)))
 			fy = sign(dy) * @G * @mass / d / (Math.sqrt(1 + (dx / dy) * (dx / dy)))
 
-			data[offset + 6] += fx
-			data[offset + 7] += fy
+			data[offset + 3] += fx
+			data[offset + 4] += fy
 
 		return

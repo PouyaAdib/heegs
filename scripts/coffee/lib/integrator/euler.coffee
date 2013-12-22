@@ -2,13 +2,13 @@ _Module = require '../core/_Module'
 
 module.exports = class Euler extends _Module
 
-	update: (dt, x, y, data, offset) ->
+	update: (dt, x, y, physData, physOffset, posData, posOffset) ->
 
-		m = data[offset + 9]
-		vx = data[offset + 3]
-		vy = data[offset + 4]
-		fx = data[offset + 6]
-		fy = data[offset + 7]
+		m = physData[physOffset + 6]
+		vx = physData[physOffset + 0]
+		vy = physData[physOffset + 1]
+		fx = physData[physOffset + 3]
+		fy = physData[physOffset + 4]
 
 		aX = fx / m
 		aY = fy / m
@@ -19,9 +19,9 @@ module.exports = class Euler extends _Module
 		vx = aX * dt + vx
 		vy = aY * dt + vy
 
-		data[offset] = x
-		data[offset + 1] = y
-		data[offset + 3] = vx
-		data[offset + 4] = vy
+		posData[posOffset] = x
+		posData[posOffset + 1] = y
+		physData[physOffset + 0] = vx
+		physData[physOffset + 1] = vy
 
 		return
