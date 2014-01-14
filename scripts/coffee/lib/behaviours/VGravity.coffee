@@ -1,10 +1,12 @@
 _Module = require '../core/_Module'
 
-module.exports = class HGravity extends _Module
+module.exports = class VGravity extends _Module
 
-	@g = .000001
+	self = @
+
+	@g = .001
 	@x = 0
-	@range = 100
+	# @range = 100
 
 	constructor: ->
 
@@ -12,21 +14,23 @@ module.exports = class HGravity extends _Module
 
 	_setDefaultValues: ->
 
-		@g = HGravity.g
-		@x = HGravity.x
-		@range = HGravity.range
+		# @g = self.g
+		# @x = self.x
+		# @range = self.range
+
+		@props = new Float32Array [self.g, self.x]
 
 	setIntensity: (n) ->
 
-		@g = n * HGravity.g
+		@props[0] = n * self.g
 
-	setX: (@x) ->
+	setX: (x) ->
 
-	setRange: (@range) ->
+		@props[1] = x
 
 	update: (dt, x, y, z, vx, vy, vz, data, offset) ->
 
-		f = (@x - x) * @g
+		f = (@props[1] - x) * @props[0]
 
 		data[offset] += f
 

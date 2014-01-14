@@ -4,9 +4,9 @@ module.exports = class Euler extends _Module
 
 	update: (dt, x, y, z, vx, vy, vz, physData, physOffset, posData, velData, offset) ->
 
-		m = physData[physOffset + 6]
-		fx = physData[physOffset + 3]
-		fy = physData[physOffset + 4]
+		m = physData[physOffset + 3]
+		fx = physData[physOffset + 0]
+		fy = physData[physOffset + 1]
 
 		aX = fx / m
 		aY = fy / m
@@ -19,7 +19,7 @@ module.exports = class Euler extends _Module
 
 		posData[offset] = x
 		posData[offset + 1] = y
-		velData[offset + 0] = vx
+		velData[offset] = vx
 		velData[offset + 1] = vy
 
 		return
