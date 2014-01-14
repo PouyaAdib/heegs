@@ -32,7 +32,7 @@ module.exports = class GravityField extends _Module
 
 		@radiusSQ = @radius * @radius
 
-	update: (dt, x, y, data, offset) ->
+	update: (dt, x, y, z, vx, vy, vz, data, offset) ->
 
 		dx = @x - x; dy = @y - y
 		dx2 = dx * dx
@@ -45,7 +45,7 @@ module.exports = class GravityField extends _Module
 			fx = sign(dx) * @G * @mass / d / (Math.sqrt(1 + (dy / dx) * (dy / dx)))
 			fy = sign(dy) * @G * @mass / d / (Math.sqrt(1 + (dx / dy) * (dx / dy)))
 
-			data[offset + 3] += fx
-			data[offset + 4] += fy
+			data[offset] += fx
+			data[offset + 1] += fy
 
 		return

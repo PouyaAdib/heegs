@@ -72,10 +72,10 @@ module.exports = class Wind extends _Module
 		@xf = @width / Wind.xl
 		@yf = @height / Wind.yl
 
-	update: (dt, x, y, data, offset) ->
+	update: (dt, x, y, z, vx, vy, vz, data, offset) ->
 
 		if @x < x < @xend and @y < y < @yend
 
 			fx = @pattern[Math.floor(Math.abs(y - @y) / @yf)][Math.floor(Math.abs(x - @x) / @xf)] * @c
 
-			data[offset + 3] = fx
+			data[offset] = fx

@@ -81,7 +81,7 @@ module.exports = class OGravity extends _Module
 			fx = s * Math.cos(theta) * magnitude
 			fy = - s * Math.sin(theta) * magnitude
 
-			data[offset + 3] += fx
-			data[offset + 4] += fy
+			data[offset] += fx
+			data[offset + 1] += fy
 
 		return
