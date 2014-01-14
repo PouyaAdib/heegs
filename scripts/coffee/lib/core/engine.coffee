@@ -4,11 +4,24 @@ Esterakt = require 'esterakt'
 
 module.exports = class Engine
 
-	constructor: (n) ->
+	constructor: (n = 50000, fps = 60, length = 10) ->
 
 		@n = parseInt n
-		@particles = []
+		@_fps = parseInt fps
+		@_length = length * 60
+
+		@_msTimeStep = 1000 / @_fps
+
 		@behaviours = []
+		@particles = []
+
+		@_lastSixtyFramesPosCache = new Float32Array(@n * 3 * 60)
+		@_lastSixtyFramesVelCache = new Float32Array(@n * 3 * 60)
+		@_wholePosCache = new Float32Array(@n * @_length * 3)
+		@_wholeVelCache = new Float32Array(@n * @_length * 3)
+		@_lastValidCacheTime = 0
+
+		@_currentTime = 0
 
 		@integrator = new Euler
 
@@ -22,9 +35,9 @@ module.exports = class Engine
 
 		@_struct.getContainer('pos').float 'p', 3
 
-		phys = @_struct.getContainer('phys')
+		@_struct.getContainer('vel').float 'v', 3
 
-		phys.float 'v', 3
+		phys = @_struct.getContainer('phys')
 
 		phys.float 'f', 3
 
@@ -33,9 +46,11 @@ module.exports = class Engine
 		@_params = @_struct.makeParamHolders {}, @n
 
 		@_physData = new Float32Array @_params.__buffers.phys
+		@_velData = new Float32Array @_params.__buffers.vel
 		@_posData = new Float32Array @_params.__buffers.pos
 
 		@uint8ViewOnPos = @_params.__uint8Views.pos
+		@uint8ViewOnVel = @_params.__uint8Views.vel
 
 		for param in @_params
 
@@ -51,46 +66,147 @@ module.exports = class Engine
 
 		@particles[i]
 
-	start: (t) ->
+	requestTick: (t, hadChanged = false, changeFrom = false) ->
 
-		@time = t
+		last60 = t - 1000
 
-	update: (t) ->
+		startTime = @_calculateStartTime t, changeFrom
 
-		dt = @_ticktack t
+		unless hadChanged
 
-		@_updateParticles dt
+			deltaT = t - startTime
+
+			count = deltaT / @_msTimeStep
+
+			count = if count % 1 > .5 then parseInt(count + 1) else parseInt(count)
+
+			for i in [0...count]
+
+				@_updateParticles @_msTimeStep
+
+				now = i * @_msTimeStep
+
+				if last60 <= now < t
+
+					index = @n * 3 * parseInt((now - t + 1000) * 0.06)
+
+					@_setToLastSixtyCache index
+
+				if now % 1000 < .1
+
+					cacheTime = startTime + Math.round(i * @_msTimeStep)
+
+					unless cacheTime <= @_lastValidCacheTime
+
+						@_setToWholeCache cacheTime
+
+		else
+
+		@_currentTime = t
 
 		return
+
+	_calculateStartTime: (t, changedFrom) ->
+
+		unless changedFrom
+
+			if @_currentTime - 1000 <= t < @_currentTime
+
+				index = @n * 3 * Math.round((t - @_currentTime + 1000) * 0.06)
+
+				@_readFromLastSixtyCache index
+
+				return t
+
+			else
+
+				st = if t < @_lastValidCacheTime then parseInt(t / 1000) * 1000 else @_lastValidCacheTime
+
+				@_readFromWholeCache st
+
+				return st
+
+		else
+
+			if changedFrom > t then return @_calculateStartTime t, false
+
+			if changedFrom < @_lastValidCacheTime then @_lastValidCacheTime = parseInt(changedFrom / 1000) * 1000
+
+			if @_currentTime - 1000 <= changedFrom < @_currentTime
+
+				index = @n * 3 * parseInt((changedFrom - @_currentTime + 1000) * 0.06)
+
+				@_readFromLastSixtyCache index
+
+				return t
+
+			else
+
+				@_readFromWholeCache @_lastValidCacheTime
+
+				return @_lastValidCacheTime
+
+
+	_readFromLastSixtyCache: (index) ->
+
+		pos = @_lastSixtyFramesPosCache.subarray(index, index + @n * 3)
+		@_posData.set(pos)
+		vel = @_lastSixtyFramesVelCache.subarray(index, index + @n * 3)
+		@_velData.set(vel)
+
+	_setToLastSixtyCache: (index) ->
+
+		pos = @_lastSixtyFramesPosCache.subarray(index, index + @n * 3)
+		pos.set(@_posData)
+		vel = @_lastSixtyFramesVelCache.subarray(index, index + @n * 3)
+		vel.set(@_velData)
+
+	_readFromWholeCache: (time) ->
+
+		index = @n * 3 * parseInt(time / 1000)
+
+		pos = @_wholePosCache.subarray(index, index + @n * 3)
+		@_posData.set(pos)
+		vel = @_wholeVelCache.subarray(index, index + @n * 3)
+		@_velData.set(vel)
+
+	_setToWholeCache: (time) ->
+
+		@_lastValidCacheTime = time
+
+		index = @n * 3 * parseInt(@_lastValidCacheTime / 1000)
+
+		pos = @_wholePosCache.subarray(index, index + @n * 3)
+		pos.set(@_posData)
+		vel = @_wholeVelCache.subarray(index, index + @n * 3)
+		vel.set(@_velData)
 
 	_updateParticles: (dt) ->
 
 		for i in [0...@n]
 
-			posOffset = (i * 3) | 0
-			physOffset = (i * 7)|0
+			offset = (i * 3) | 0
+			physOffset = (i * 4)|0
 
-			x = @_posData[posOffset]
-			y = @_posData[posOffset + 1]
+			x = @_posData[offset]
+			y = @_posData[offset + 1]
+			z = @_posData[offset + 2]
+
+			vx = @_velData[offset]
+			vy = @_velData[offset + 1]
+			vz = @_velData[offset + 2]
 
 			for b in @behaviours
 
-				b.update dt, x, y, @_physData, physOffset
+				b.update dt, x, y, z, vx, vy, vz, @_physData, physOffset
 
-			@integrator.update dt, x, y, @_physData, physOffset, @_posData, posOffset
+			@integrator.update dt, x, y, z, vx, vy, vz, @_physData, physOffset, @_posData, @_velData, offset
 
 			@_physData[physOffset + 3] = 0
 			@_physData[physOffset + 4] = 0
 			@_physData[physOffset + 5] = 0
 
 		return
-
-	_ticktack: (t) ->
-
-		dt = t - @time
-		@time = t
-
-		return dt
 
 	addBehaviour: (behaviour) ->
 

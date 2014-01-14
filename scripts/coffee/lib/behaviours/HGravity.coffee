@@ -24,11 +24,11 @@ module.exports = class HGravity extends _Module
 
 	setRange: (@range) ->
 
-	update: (dt, x, y, data, offset) ->
+	update: (dt, x, y, z, vx, vy, vz, data, offset) ->
 
 		if 0 < Math.abs(@y - y) < @range
 
 			f = (@y - y) * @g
 
-			data[offset + 4] += f
+			data[offset + 1] += f
 
