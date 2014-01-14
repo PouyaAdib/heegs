@@ -25,9 +25,13 @@ module.exports = class Engine
 
 		@integrator = new Euler
 
+		@_ticker = null
+
 		do @_prepareParticles
 
 		@
+
+	setTicker: (@_ticker) ->
 
 	_prepareParticles: ->
 
@@ -72,37 +76,39 @@ module.exports = class Engine
 
 		startTime = @_calculateStartTime t, changeFrom
 
-		unless hadChanged
+		# console.log 'requested', t, @behaviours[0].props
 
-			deltaT = t - startTime
+		deltaT = t - startTime
 
-			count = deltaT / @_msTimeStep
+		count = deltaT / @_msTimeStep
 
-			count = if count % 1 > .5 then parseInt(count + 1) else parseInt(count)
+		count = if count % 1 > .5 then parseInt(count + 1) else parseInt(count)
 
-			for i in [0...count]
+		for i in [0...count]
 
-				@_updateParticles @_msTimeStep
+			now = i * @_msTimeStep
 
-				now = i * @_msTimeStep
+			@_ticker.tick now + startTime
 
-				if last60 <= now < t
+			@_updateParticles @_msTimeStep
 
-					index = @n * 3 * parseInt((now - t + 1000) * 0.06)
+			if last60 <= now < t
 
-					@_setToLastSixtyCache index
+				index = @n * 3 * parseInt((now - t + 1000) * 0.06)
 
-				if now % 1000 < .1
+				@_setToLastSixtyCache index
 
-					cacheTime = startTime + Math.round(i * @_msTimeStep)
+			if now % 1000 < .1
 
-					unless cacheTime <= @_lastValidCacheTime
+				cacheTime = startTime + Math.round(i * @_msTimeStep)
 
-						@_setToWholeCache cacheTime
+				unless cacheTime <= @_lastValidCacheTime
 
-		else
+					@_setToWholeCache cacheTime
 
 		@_currentTime = t
+
+		# console.log @_posData
 
 		return
 
@@ -202,9 +208,9 @@ module.exports = class Engine
 
 			@integrator.update dt, x, y, z, vx, vy, vz, @_physData, physOffset, @_posData, @_velData, offset
 
-			@_physData[physOffset + 3] = 0
-			@_physData[physOffset + 4] = 0
-			@_physData[physOffset + 5] = 0
+			@_physData[physOffset + 0] = 0
+			@_physData[physOffset + 1] = 0
+			@_physData[physOffset + 2] = 0
 
 		return
 
