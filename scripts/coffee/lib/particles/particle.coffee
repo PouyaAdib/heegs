@@ -1,5 +1,3 @@
-Vector = require '../tools/Vector'
-
 module.exports = class Particle
 
 	constructor: (@param) ->

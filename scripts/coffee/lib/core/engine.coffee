@@ -70,13 +70,21 @@ module.exports = class Engine
 
 		@particles[i]
 
-	requestTick: (t, hadChanged = false, changeFrom = false) ->
+	initConditionsDone: ->
+
+		fr = 0
+		to = @n * 3
+
+		@_wholePosCache.subarray(fr, to).set @_posData
+		@_wholeVelCache.subarray(fr, to).set @_velData
+
+	requestTick: (t, hadChange, changeFrom) ->
+
+		t -= t%@_msTimeStep
 
 		last60 = t - 1000
 
-		startTime = @_calculateStartTime t, changeFrom
-
-		# console.log 'requested', t, @behaviours[0].props
+		startTime = @_updateCacheAndReturnStartTime t, hadChange, changeFrom
 
 		deltaT = t - startTime
 
@@ -86,106 +94,73 @@ module.exports = class Engine
 
 		for i in [0...count]
 
-			now = i * @_msTimeStep
+			now = startTime + i * @_msTimeStep
 
-			@_ticker.tick now + startTime
+			@_ticker.tick now
 
 			@_updateParticles @_msTimeStep
 
 			if last60 <= now < t
 
-				index = @n * 3 * parseInt((now - t + 1000) * 0.06)
+				fr = @n * 3 * parseInt((now - t + 1000) * 0.06)
+				to = fr + @n * 3
 
-				@_setToLastSixtyCache index
+				@_lastSixtyFramesPosCache.subarray(fr, to).set @_posData
+				@_lastSixtyFramesVelCache.subarray(fr, to).set @_velData
 
 			if now % 1000 < .1
 
-				cacheTime = startTime + Math.round(i * @_msTimeStep)
+				cacheTime = now - now%1000
 
 				unless cacheTime <= @_lastValidCacheTime
+					console.log startTime, cacheTime
+					@_lastValidCacheTime = cacheTime
 
-					@_setToWholeCache cacheTime
+					fr = @n * 3 * parseInt(@_lastValidCacheTime / 1000)
+					to = fr + @n * 3
+
+					@_wholePosCache.subarray(fr, to).set @_posData
+					@_wholeVelCache.subarray(fr, to).set @_velData
 
 		@_currentTime = t
 
-		# console.log @_posData
-
 		return
 
-	_calculateStartTime: (t, changedFrom) ->
+	_updateCacheAndReturnStartTime: (t, hadChange, changeFrom) ->
 
-		unless changedFrom
+		t1 = t
 
-			if @_currentTime - 1000 <= t < @_currentTime
+		if hadChange
 
-				index = @n * 3 * Math.round((t - @_currentTime + 1000) * 0.06)
+			if changeFrom < @_lastValidCacheTime then @_lastValidCacheTime = parseInt(changeFrom / 1000) * 1000
 
-				@_readFromLastSixtyCache index
+			if changeFrom > t then return @_updateCacheAndReturnStartTime t, false, null
 
-				return t
+			t1 = changeFrom
 
-			else
+		if @_currentTime - 1000 <= t1 < @_currentTime
 
-				st = if t < @_lastValidCacheTime then parseInt(t / 1000) * 1000 else @_lastValidCacheTime
+			fr = @n * 3 * Math.round((t1 - @_currentTime + 1000) * 0.06)
+			to = fr + @n * 3
 
-				@_readFromWholeCache st
+			@_posData.set @_lastSixtyFramesPosCache.subarray(fr, to)
+			@_velData.set @_lastSixtyFramesVelCache.subarray(fr, to)
 
-				return st
+			st = t1
 
 		else
 
-			if changedFrom > t then return @_calculateStartTime t, false
+			st = if t < @_lastValidCacheTime then parseInt(t / 1000) * 1000 else @_lastValidCacheTime
 
-			if changedFrom < @_lastValidCacheTime then @_lastValidCacheTime = parseInt(changedFrom / 1000) * 1000
+			fr = @n * 3 * parseInt(st / 1000)
+			to = fr + @n * 3
 
-			if @_currentTime - 1000 <= changedFrom < @_currentTime
+			@_posData.set @_wholePosCache.subarray(fr, to)
+			@_velData.set @_wholeVelCache.subarray(fr, to)
 
-				index = @n * 3 * parseInt((changedFrom - @_currentTime + 1000) * 0.06)
+		@_lastValidCacheTime = parseInt(st / 1000) * 1000
 
-				@_readFromLastSixtyCache index
-
-				return t
-
-			else
-
-				@_readFromWholeCache @_lastValidCacheTime
-
-				return @_lastValidCacheTime
-
-
-	_readFromLastSixtyCache: (index) ->
-
-		pos = @_lastSixtyFramesPosCache.subarray(index, index + @n * 3)
-		@_posData.set(pos)
-		vel = @_lastSixtyFramesVelCache.subarray(index, index + @n * 3)
-		@_velData.set(vel)
-
-	_setToLastSixtyCache: (index) ->
-
-		pos = @_lastSixtyFramesPosCache.subarray(index, index + @n * 3)
-		pos.set(@_posData)
-		vel = @_lastSixtyFramesVelCache.subarray(index, index + @n * 3)
-		vel.set(@_velData)
-
-	_readFromWholeCache: (time) ->
-
-		index = @n * 3 * parseInt(time / 1000)
-
-		pos = @_wholePosCache.subarray(index, index + @n * 3)
-		@_posData.set(pos)
-		vel = @_wholeVelCache.subarray(index, index + @n * 3)
-		@_velData.set(vel)
-
-	_setToWholeCache: (time) ->
-
-		@_lastValidCacheTime = time
-
-		index = @n * 3 * parseInt(@_lastValidCacheTime / 1000)
-
-		pos = @_wholePosCache.subarray(index, index + @n * 3)
-		pos.set(@_posData)
-		vel = @_wholeVelCache.subarray(index, index + @n * 3)
-		vel.set(@_velData)
+		return st
 
 	_updateParticles: (dt) ->
 
@@ -208,7 +183,7 @@ module.exports = class Engine
 
 			@integrator.update dt, x, y, z, vx, vy, vz, @_physData, physOffset, @_posData, @_velData, offset
 
-			@_physData[physOffset + 0] = 0
+			@_physData[physOffset] = 0
 			@_physData[physOffset + 1] = 0
 			@_physData[physOffset + 2] = 0
 

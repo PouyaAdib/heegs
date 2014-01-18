@@ -3,8 +3,10 @@ MT = require '../tools/MathTools'
 
 module.exports = class Drag extends _Module
 
-	@sb = 0.000001
-	@db = 0.000001
+	self = @
+
+	@sb = 0.00001
+	@db = 0.00001
 
 	constructor: ->
 
@@ -12,21 +14,20 @@ module.exports = class Drag extends _Module
 
 	_setDefaultValues: ->
 
-		@sb = Drag.sb
-		@db = Drag.db
+		@props = new Float32Array [self.sb, self.db]
 
 	setIntensity: (n, m) ->
 
-		@sb = n * Drag.sb
-		@db = m * Drag.db
+		@props[0] = n * self.sb
+		@props[1] = m * self.db
 
 	update: (dt, x, y, z, vx, vy, vz, data, offset) ->
 
 		vx = data[offset + 0]
 		vy = data[offset + 1]
 
-		fx = - ( @sb + Math.random() * @db ) * vx
-		fy = - ( @sb + Math.random() * @db ) * vy
+		fx = - ( @props[0] + Math.random() * @props[1] ) * vx
+		fy = - ( @props[0] + Math.random() * @props[1] ) * vy
 
 		data[offset] += fx
 		data[offset + 1] += fy
