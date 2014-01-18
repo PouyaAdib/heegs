@@ -3,11 +3,11 @@ _Module = require '../core/_Module'
 
 module.exports = class GravityField extends _Module
 
-	@mass = 1
+	self = @
+
+	@g = 1
 	@x = 0
 	@y = 0
-	@radius = 1000
-	@G = 10
 
 	constructor: ->
 
@@ -15,37 +15,35 @@ module.exports = class GravityField extends _Module
 
 	_setDefaultValues: ->
 
-		@mass = GravityField.mass
-		@x = GravityField.x
-		@y = GravityField.y
-		@radius = GravityField.radius
-		@radiusSQ = Math.pow(GravityField.radius, 2)
-		@G = GravityField.G
+		@props = new Float32Array [self.g, self.x, self.y]
 
-	setMass: (n) ->
+	setG: (n) ->
 
-		@mass = n * GravityField.mass
+		@props[0] = n * self.g
 
-	setCenter: (@x, @y) ->
+	setCenter: (x, y) ->
 
-	setRadius: (@radius) ->
+		@props[1] = x
+		@props[2] = y
 
-		@radiusSQ = @radius * @radius
+	# setRadius: (radius) ->
+
+	# 	@radiusSQ = @radius * @radius
 
 	update: (dt, x, y, z, vx, vy, vz, data, offset) ->
 
-		dx = @x - x; dy = @y - y
+		dx = @props[1] - x; dy = @props[2] - y
 		dx2 = dx * dx
 		dy2 = dy * dy
 
 		d = dx2 + dy2
 
-		if 0 < d <= @radiusSQ
+		# if 0 < d <= @radiusSQ
 
-			fx = sign(dx) * @G * @mass / d / (Math.sqrt(1 + (dy / dx) * (dy / dx)))
-			fy = sign(dy) * @G * @mass / d / (Math.sqrt(1 + (dx / dy) * (dx / dy)))
+		fx = 1e-6 * sign(dx) * @props[0] / d / (Math.sqrt(1 + (dy / dx) * (dy / dx)))
+		fy = 1e-6 * sign(dy) * @props[0] / d / (Math.sqrt(1 + (dx / dy) * (dx / dy)))
 
-			data[offset] += fx
-			data[offset + 1] += fy
+		data[offset] += fx
+		data[offset + 1] += fy
 
 		return
