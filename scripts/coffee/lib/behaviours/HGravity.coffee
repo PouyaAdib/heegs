@@ -4,9 +4,8 @@ module.exports = class HGravity extends _Module
 
 	self = @
 
-	@g = .000001
+	@c = 1e-6
 	@y = 0
-	# @range = 100
 
 	constructor: ->
 
@@ -14,23 +13,20 @@ module.exports = class HGravity extends _Module
 
 	_setDefaultValues: ->
 
-		@props = new Float32Array [self.g, self.y]
+		@props = new Float32Array [1, self.y]
+		@c = self.c
 
 	setIntensity: (n) ->
 
-		@props[0] = n * self.g
+		@props[0] = n
 
 	setY: (y) ->
 
 		@props[1] = y
 
-	# setRange: (@range) ->
-
 	update: (dt, x, y, z, vx, vy, vz, data, offset) ->
 
-		# if 0 < Math.abs(@y - y) < @range
-
-		f = (@props[1] - y) * @props[0]
+		f = @c * (@props[1] - y) * @props[0]
 
 		data[offset + 1] += f
 

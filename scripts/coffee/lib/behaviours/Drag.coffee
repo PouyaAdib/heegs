@@ -5,8 +5,7 @@ module.exports = class Drag extends _Module
 
 	self = @
 
-	@sb = 0.00001
-	@db = 0.00001
+	@c = 1e-5
 
 	constructor: ->
 
@@ -14,17 +13,18 @@ module.exports = class Drag extends _Module
 
 	_setDefaultValues: ->
 
-		@props = new Float32Array [self.sb, self.db]
+		@props = new Float32Array [1, 1]
+		@c = self.c
 
 	setIntensity: (n, m) ->
 
-		@props[0] = n * self.sb
-		@props[1] = m * self.db
+		@props[0] = n
+		@props[1] = m
 
 	update: (dt, x, y, z, vx, vy, vz, data, offset) ->
 
-		fx = - ( @props[0] + Math.random() * @props[1] ) * vx
-		fy = - ( @props[0] + Math.random() * @props[1] ) * vy
+		fx = - @c * ( @props[0] + Math.random() * @props[1] ) * vx
+		fy = - @c * ( @props[0] + Math.random() * @props[1] ) * vy
 
 		data[offset] += fx
 		data[offset + 1] += fy

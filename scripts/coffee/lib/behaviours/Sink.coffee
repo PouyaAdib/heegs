@@ -7,7 +7,7 @@ module.exports = class Sink extends _Module
 
 	@x = 0
 	@y = 0
-	@c = .00000001
+	@c = 1e-6
 
 	constructor: ->
 
@@ -15,13 +15,17 @@ module.exports = class Sink extends _Module
 
 	_setDefaultValues: ->
 
-		@props = new Float32Array [self.c, self.x, self.y]
+		@props = new Float32Array [1, self.x, self.y]
+		@c = self.c
 
-	# setCenter: (@x, @y) ->
+	setCenter: (x, y) ->
 
-	# setIntensity: (n) ->
+		@props[1] = x
+		@props[2] = y
 
-	# 	@c = n * Sink.c
+	setIntensity: (n) ->
+
+		@props[0] = n
 
 	update: (dt, x, y, z, vx, vy, vz, data, offset) ->
 
@@ -30,8 +34,8 @@ module.exports = class Sink extends _Module
 		dx2 = dx * dx
 		dy2 = dy * dy
 
-		fx = 1e-6 * sign(dx) * @props[0] * (dx2 + dy2) / (Math.sqrt(1 + (dy / dx) * (dy / dx)))
-		fy = 1e-6 * sign(dy) * @props[0] * (dx2 + dy2) / (Math.sqrt(1 + (dx / dy) * (dx / dy)))
+		fx = @c * sign(dx) * @props[0] * (dx2 + dy2) / (Math.sqrt(1 + (dy / dx) * (dy / dx)))
+		fy = @c * sign(dy) * @props[0] * (dx2 + dy2) / (Math.sqrt(1 + (dx / dy) * (dx / dy)))
 
 		data[offset] += fx
 		data[offset + 1] += fy

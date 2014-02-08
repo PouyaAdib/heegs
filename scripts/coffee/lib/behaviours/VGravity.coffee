@@ -4,9 +4,8 @@ module.exports = class VGravity extends _Module
 
 	self = @
 
-	@g = .001
+	@c = 1e-6
 	@x = 0
-	# @range = 100
 
 	constructor: ->
 
@@ -14,11 +13,12 @@ module.exports = class VGravity extends _Module
 
 	_setDefaultValues: ->
 
-		@props = new Float32Array [self.g, self.x]
+		@props = new Float32Array [1, self.x]
+		@c = self.c
 
 	setIntensity: (n) ->
 
-		@props[0] = n * self.g
+		@props[0] = n
 
 	setX: (x) ->
 
@@ -26,7 +26,7 @@ module.exports = class VGravity extends _Module
 
 	update: (dt, x, y, z, vx, vy, vz, data, offset) ->
 
-		f = 1e-6 * (@props[1] - x) * @props[0]
+		f = @c * (@props[1] - x) * @props[0]
 
 		data[offset] += f
 
