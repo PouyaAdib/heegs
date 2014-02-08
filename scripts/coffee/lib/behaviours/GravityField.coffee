@@ -5,7 +5,7 @@ module.exports = class GravityField extends _Module
 
 	self = @
 
-	@c = 1e-6
+	@c = 1
 	@x = 0
 	@y = 0
 
