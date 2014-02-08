@@ -102,7 +102,7 @@ module.exports = class Engine
 
 			if last60 <= now < t
 
-				fr = @n * 3 * parseInt((now - t + 1000) * 0.06)
+				fr = @n * 3 * Math.round((now - last60) * 0.059)
 				to = fr + @n * 3
 
 				@_lastSixtyFramesPosCache.subarray(fr, to).set @_posData
@@ -113,7 +113,7 @@ module.exports = class Engine
 				cacheTime = now - now%1000
 
 				unless cacheTime <= @_lastValidCacheTime
-					console.log startTime, cacheTime
+
 					@_lastValidCacheTime = cacheTime
 
 					fr = @n * 3 * parseInt(@_lastValidCacheTime / 1000)
@@ -140,7 +140,7 @@ module.exports = class Engine
 
 		if @_currentTime - 1000 <= t1 < @_currentTime
 
-			fr = @n * 3 * Math.round((t1 - @_currentTime + 1000) * 0.06)
+			fr = @n * 3 * Math.round((t1 - @_currentTime + 1000) * 0.059)
 			to = fr + @n * 3
 
 			@_posData.set @_lastSixtyFramesPosCache.subarray(fr, to)
