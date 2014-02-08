@@ -5,7 +5,7 @@ module.exports = class GravityField extends _Module
 
 	self = @
 
-	@g = 1
+	@c = 1e-6
 	@x = 0
 	@y = 0
 
@@ -15,20 +15,17 @@ module.exports = class GravityField extends _Module
 
 	_setDefaultValues: ->
 
-		@props = new Float32Array [self.g, self.x, self.y]
+		@props = new Float32Array [1, self.x, self.y]
+		@c = self.c
 
 	setG: (n) ->
 
-		@props[0] = n * self.g
+		@props[0] = n
 
 	setCenter: (x, y) ->
 
 		@props[1] = x
 		@props[2] = y
-
-	# setRadius: (radius) ->
-
-	# 	@radiusSQ = @radius * @radius
 
 	update: (dt, x, y, z, vx, vy, vz, data, offset) ->
 
@@ -38,10 +35,8 @@ module.exports = class GravityField extends _Module
 
 		d = dx2 + dy2
 
-		# if 0 < d <= @radiusSQ
-
-		fx = 1e-6 * sign(dx) * @props[0] / d / (Math.sqrt(1 + (dy / dx) * (dy / dx)))
-		fy = 1e-6 * sign(dy) * @props[0] / d / (Math.sqrt(1 + (dx / dy) * (dx / dy)))
+		fx = @c * sign(dx) * @props[0] / d / (Math.sqrt(1 + (dy / dx) * (dy / dx)))
+		fy = @c * sign(dy) * @props[0] / d / (Math.sqrt(1 + (dx / dy) * (dx / dy)))
 
 		data[offset] += fx
 		data[offset + 1] += fy
