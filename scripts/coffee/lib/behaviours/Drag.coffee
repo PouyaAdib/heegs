@@ -5,7 +5,7 @@ module.exports = class Drag extends _Module
 
 	self = @
 
-	@c = 1e-5
+	@c = 1e-4
 
 	constructor: ->
 

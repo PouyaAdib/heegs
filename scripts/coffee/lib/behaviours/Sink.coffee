@@ -7,7 +7,7 @@ module.exports = class Sink extends _Module
 
 	@x = 0
 	@y = 0
-	@c = 1e-6
+	@c = 1e-8
 
 	constructor: ->
 
