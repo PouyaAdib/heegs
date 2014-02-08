@@ -13,7 +13,7 @@ module.exports = class VGravity extends _Module
 
 	_setDefaultValues: ->
 
-		@props = new Float32Array [1, self.x]
+		@props = new Float32Array [0, self.x]
 		@c = self.c
 
 	setIntensity: (n) ->

@@ -13,7 +13,7 @@ module.exports = class Drag extends _Module
 
 	_setDefaultValues: ->
 
-		@props = new Float32Array [1, 1]
+		@props = new Float32Array [0, 0]
 		@c = self.c
 
 	setIntensity: (n, m) ->

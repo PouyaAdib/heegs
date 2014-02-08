@@ -13,7 +13,7 @@ module.exports = class HGravity extends _Module
 
 	_setDefaultValues: ->
 
-		@props = new Float32Array [1, self.y]
+		@props = new Float32Array [0, self.y]
 		@c = self.c
 
 	setIntensity: (n) ->
