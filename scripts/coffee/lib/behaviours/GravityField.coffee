@@ -15,10 +15,10 @@ module.exports = class GravityField extends _Module
 
 	_setDefaultValues: ->
 
-		@props = new Float32Array [1, self.x, self.y]
+		@props = new Float32Array [0, self.x, self.y]
 		@c = self.c
 
-	setG: (n) ->
+	setIntensity: (n) ->
 
 		@props[0] = n
 
