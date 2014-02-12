@@ -23,8 +23,10 @@ module.exports = class Drag extends _Module
 
 	update: (dt, x, y, z, vx, vy, vz, data, offset) ->
 
-		fx = - @c * ( @props[0] + Math.random() * @props[1] ) * vx
-		fy = - @c * ( @props[0] + Math.random() * @props[1] ) * vy
+		miu = data[offset + 4]
+
+		fx = - @c * ( @props[0] + miu * @props[1] ) * vx
+		fy = - @c * ( @props[0] + miu * @props[1] ) * vy
 
 		data[offset] += fx
 		data[offset + 1] += fy
