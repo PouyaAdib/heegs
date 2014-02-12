@@ -47,6 +47,8 @@ module.exports = class Engine
 
 		phys.float 'm', 1, [1]
 
+		phys.float 'c', 1, [0]
+
 		@_params = @_struct.makeParamHolders {}, @n
 
 		@_physData = new Float32Array @_params.__buffers.phys
@@ -167,7 +169,7 @@ module.exports = class Engine
 		for i in [0...@n]
 
 			offset = (i * 3) | 0
-			physOffset = (i * 4)|0
+			physOffset = (i * 5)|0
 
 			x = @_posData[offset]
 			y = @_posData[offset + 1]

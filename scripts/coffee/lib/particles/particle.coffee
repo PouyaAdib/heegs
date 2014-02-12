@@ -10,6 +10,12 @@ module.exports = class Particle
 
 		@
 
+	setFrictionCoeff: (c) ->
+
+		@param.c[0] = c
+
+		@
+
 	moveTo: (x, y, z) ->
 
 		@param.p[0] = x
