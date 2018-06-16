@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "outDir": "build/",
+    "moduleResolution": "node",
+    "baseUrl": ".",
+  },
+  "include": ["src"]
+}

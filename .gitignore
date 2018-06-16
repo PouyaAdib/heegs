@@ -1,6 +1,15 @@
-/node_modules
-/xeno
-/.vscode
+.vscode
+.rpt2_cache
+
+.changelog
+.DS_Store
+
 *.log
 
-.DS_Store
+node_modules
+build
+dist
+xeno
+
+package-log.json
+

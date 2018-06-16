@@ -1,0 +1,19 @@
+{
+  "rules": {
+    "no-implicit-dependencies": false,
+    "no-sparse-arrays": true,
+    "no-string-literal": true,
+    "no-var-keyword": true,
+    "prefer-object-spread": true,
+    "use-isnan": true,
+    "no-duplicate-imports": true,
+    "prefer-const": true,
+    "no-duplicate-super": true,
+    "no-multiline-string-literals": true,
+    "no-redundant-parentheses": true,
+    "no-unenclosed-multiline-block": true,
+    "no-useless-increment": true,
+    "use-primitive-type": true
+  },
+  "rulesDirectory": ["./node_modules/tslint-sonarts/lib/rules"]
+}
