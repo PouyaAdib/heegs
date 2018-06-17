@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "clear": "rimraf build/*",
+    "clear": "rimraf build/* dist/*",
     "rollup:watch": "rollup -c -w",
     "build:dev": "run-s clear rollup:watch",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,6 +17,7 @@
     "prettier": "1.13.5",
     "rimraf": "^2.6.2",
     "rollup": "^0.60.7",
+    "rollup-plugin-terser": "^1.0.1",
     "rollup-plugin-typescript2": "^0.15.0",
     "tape": "^4.9.1",
     "tslint": "^5.10.0",
