@@ -6,10 +6,6 @@
     "moduleResolution": "node",
     "baseUrl": ".",
   },
-<<<<<<< HEAD
   "include": ["src/**/*"],
   "exclude": ["node_modules", "**/*.test.ts"]
-=======
-  "include": ["src"]
->>>>>>> config
 }
