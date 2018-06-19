@@ -1,3 +1,4 @@
 import Engine from './core/Engine'
+import Drag from './behaviors/drag'
 
-export {Engine as default}
+export {Engine, Drag}
