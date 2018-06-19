@@ -14,7 +14,7 @@ class Drag implements IBehavior {
     this.randomCoeff = randomCoeff
   }
 
-  update(dt: number, x: number, y: number, data: Float32Array, offset: number) {
+  update(_, __, ___, data: Float32Array, offset: number) {
     const vx = data[offset]
     const vy = data[offset + 1]
 

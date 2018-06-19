@@ -3,9 +3,9 @@ import {TBehavior} from '../behaviors/types'
 import {euler} from './integrators'
 
 class Engine {
+  positionData: Float32Array
+  physicsData: Float32Array
   private numberOfParticles: number
-  private positionData: Float32Array
-  private physicsData: Float32Array
   private behaviors: TBehavior[]
   private time: number
 
