@@ -6,9 +6,11 @@
   "scripts": {
     "clear": "rimraf build/* dist/*",
     "rollup:watch": "rollup -c -w",
+    "rollup:build": "rollup -c",
     "build:dev": "run-s clear rollup:watch",
     "tsnode:compilerOptions": "ts-node --compilerOptions '{\"module\":\"commonjs\", \"target\":\"es6\"}'",
-    "test": "npm run tsnode:compilerOptions node_modules/tape/bin/tape **/*/__tests__/*.test.ts"
+    "test": "npm run tsnode:compilerOptions node_modules/tape/bin/tape **/*/__tests__/*.test.ts",
+    "prepublish": "run-s clear rollup:build"
   },
   "author": "Pouya Adib <pouyaadn@gmail.com>",
   "license": "MIT",
