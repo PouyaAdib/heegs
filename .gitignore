@@ -11,4 +11,4 @@ build
 dist
 xeno
 
-package-log.json
+package-lock.json
