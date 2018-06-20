@@ -42,14 +42,16 @@ setTimeout(() => {
 }, 38500)
 
 main(h.positionData)
-setTimeout(() => {
-  h.start(performance.now())
-  update()
-}, 1000)
+
 function update() {
   h.update(performance.now())
   replacePositions(h.positionData)
   requestAnimationFrame(update)
+}
+
+function start() {
+  h.start(performance.now())
+  update()
 }
 
 function getHeegsGeometry() {
