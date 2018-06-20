@@ -1,8 +1,12 @@
 {
   "name": "heegs",
+  "license": "MIT",
   "version": "1.0.0",
+  "author": "Pouya Adib <pouyaadn@gmail.com>",
+  "repository": "https://github.com/PouyaAdib/heegs",
   "description": "",
   "main": "index.js",
+  "unpkg": "dist/index.js",
   "scripts": {
     "clear": "rimraf build/* dist/*",
     "rollup:watch": "rollup -c -w",
@@ -12,9 +16,6 @@
     "test": "npm run tsnode:compilerOptions node_modules/tape/bin/tape **/*/__tests__/*.test.ts",
     "prepublish": "run-s clear rollup:build"
   },
-  "unpkg": "dist/index.js",
-  "author": "Pouya Adib <pouyaadn@gmail.com>",
-  "license": "MIT",
   "devDependencies": {
     "@types/tape": "^4.2.32",
     "npm-run-all": "^4.1.3",
