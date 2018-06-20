@@ -1,1 +1,0 @@
-{"code":"import BufferManager from './BufferManager';\r\nclass Engine {\r\n    constructor(numberOfParticles) {\r\n        this.numberOfParticles = numberOfParticles;\r\n        this.buffer = new BufferManager(numberOfParticles);\r\n    }\r\n}\r\nexport default Engine;\r\n"}
