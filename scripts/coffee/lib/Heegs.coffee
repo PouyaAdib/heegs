@@ -1,6 +1,0 @@
-module.exports.GravityField = require './behaviours/GravityField'
-module.exports.HGravity  = require './behaviours/HGravity'
-module.exports.VGravity = require './behaviours/VGravity'
-module.exports.Engine = require './core/Engine'
-module.exports.Drag = require './behaviours/Drag'
-module.exports.Sink = require './behaviours/Sink'
