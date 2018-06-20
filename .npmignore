@@ -1,0 +1,14 @@
+.vscode
+.rpt2_cache
+
+.changelog
+.DS_Store
+
+*.log
+
+node_modules
+build
+src
+xeno
+
+package-lock.json
