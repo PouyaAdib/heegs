@@ -1,7 +1,7 @@
 Heegs
 =====
 
-A simple 2D physics engine written in typescript, optimized for creating webgl particle effects. [Demo](https://pouyaadib.github.io/heegs/)
+A simple 2D physics engine written in typescript, optimized for creating webgl particle effects. [Demo here](https://pouyaadib.github.io/heegs/)
 
 ## Installation
 
@@ -116,3 +116,6 @@ function play() {
   requestAnimationFrame(play)
 }
 ```
+
+## Note
+I've intentionally avoided running the physics as a compute shader to see how much perf I can squeeze out of normal javascript. I managed to get 75K particles animating at 60fps on my machine, a mid 2014 mbp with integrated gpu.
