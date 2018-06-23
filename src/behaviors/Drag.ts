@@ -4,14 +4,17 @@ class Drag implements IBehavior {
   fixedCoeff: number
   randomCoeff: number
 
+  static fc = 0.000001
+  static rc = 0.0001
+
   constructor() {
-    this.fixedCoeff = 0.000001
-    this.randomCoeff = 0.000001
+    this.fixedCoeff = Drag.fc
+    this.randomCoeff = Drag.rc
   }
 
   setIntensity(fixedCoeff: number, randomCoeff: number) {
-    this.fixedCoeff = fixedCoeff
-    this.randomCoeff = randomCoeff
+    this.fixedCoeff = Drag.fc * fixedCoeff
+    this.randomCoeff = Drag.rc * randomCoeff
   }
 
   update(_, __, ___, data: Float32Array, offset: number) {

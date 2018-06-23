@@ -5,4 +5,4 @@ import PointGravity from './behaviors/PointGravity'
 import VerticalForce from './behaviors/VerticalForce'
 import HorizontalForce from './behaviors/HorizontalForce'
 
-export {Engine, Drag, Sink, VerticalForce, HorizontalForce}
+export {Engine, Drag, Sink, PointGravity, VerticalForce, HorizontalForce}
