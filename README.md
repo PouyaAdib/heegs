@@ -14,7 +14,7 @@ $ npm install heegs
 or use the standalone UMD build
 
 ```
-$ <script src="https://unpkg.com/heegs@1.0.1"></script>
+$ <script src="https://unpkg.com/heegs"></script>
 ```
 
 ## Usage
