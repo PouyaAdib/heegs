@@ -36,7 +36,7 @@ function start() {
 
   setTimeout(() => {
     const d = h.addBehavior(Heegs.Drag);
-    d.setIntensity(0.000007, 0.0007);
+    d.setIntensity(7, 7);
   }, 25000);
 
   setTimeout(() => {
