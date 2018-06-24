@@ -19,7 +19,7 @@ class HorizontalGravity implements IBehavior {
     this.y = y
   }
 
-  update(_, __, y: number, data: Float32Array, offset: number) {
+  update(_: number, __: number, y: number, data: Float32Array, offset: number) {
     data[offset + 3] += (this.y - y) * this.c
   }
 }

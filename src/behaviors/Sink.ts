@@ -22,7 +22,7 @@ class Sink implements IBehavior {
     this.y = y
   }
 
-  update(_, x: number, y: number, data: Float32Array, offset: number) {
+  update(_: number, x: number, y: number, data: Float32Array, offset: number) {
     const dx = this.x - x
     const dy = this.y - y
     const distance = Math.sqrt(dx ** 2 + dy ** 2)

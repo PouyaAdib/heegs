@@ -68,13 +68,13 @@ class Engine {
     }
   }
 
-  addBehavior(behavior: any) {
-    const behaviorInstance = new behavior
+  addBehavior(Behavior) {
+    const behaviorInstance: TBehavior = new Behavior
     this.behaviors = this.behaviors.concat(behaviorInstance)
     return behaviorInstance
   }
 
-  removeBehavior(behavior: any) {
+  removeBehavior(behavior: TBehavior) {
     const index = this.behaviors.findIndex((b) => b === behavior)
     this.behaviors = this.behaviors.slice(0, index).concat(this.behaviors.slice(index + 1))
   }

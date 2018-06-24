@@ -19,7 +19,7 @@ class VerticalGravity implements IBehavior {
     this.x = x
   }
 
-  update(_, x: number, __, data: Float32Array, offset: number) {
+  update(_: number, x: number, __: number, data: Float32Array, offset: number) {
     data[offset + 2] += (this.x - x) * this.c
   }
 }
